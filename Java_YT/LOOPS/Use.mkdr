@@ -1,0 +1,199 @@
+# Loops in Java
+
+## What are Loops?
+Loops are used to repeat a block of code multiple times without writing the same statements again and again.
+
+They help in:
+- Reducing code repetition
+- Making programs shorter
+- Saving time and effort
+
+---
+
+# Types of Loops in Java
+
+1. While Loop  
+2. Do-While Loop  
+3. For Loop  
+
+---
+
+# While Loop
+
+## Definition
+A `while` loop executes the code as long as the condition remains true.
+
+## Key Points
+- Condition is checked before execution
+- If condition is false initially, loop will not run
+- Mostly used when number of repetitions is unknown
+
+## Flow
+1. Initialization  
+2. Condition check  
+3. Execute statements  
+4. Update variable  
+5. Repeat  
+
+## Best Use Case
+- User input programs
+- Menu-driven programs
+- Situations where ending condition is uncertain
+
+---
+
+# Do-While Loop
+
+## Definition
+A `do-while` loop executes the code first and checks the condition later.
+
+## Key Points
+- Runs at least one time
+- Condition is checked after execution
+- Useful when code must execute once no matter what
+
+## Flow
+1. Execute statements  
+2. Check condition  
+3. Repeat if condition is true  
+
+## Best Use Case
+- Menu systems
+- Asking user choices repeatedly
+- Programs needing first execution compulsory
+
+---
+
+# For Loop
+
+## Definition
+A `for` loop is used when the number of repetitions is already known.
+
+## Key Points
+- Initialization, condition, and update are written in one line
+- Easy to read and manage
+- Most commonly used loop
+
+## Flow
+1. Initialization  
+2. Condition check  
+3. Execute statements  
+4. Update variable  
+5. Repeat  
+
+## Best Use Case
+- Counting
+- Fixed repetitions
+- Arrays and patterns
+
+---
+
+# Difference Between Loops
+
+| Feature | While Loop | Do-While Loop | For Loop |
+|---|---|---|---|
+| Condition Check | Before execution | After execution | Before execution |
+| Executes at least once | No | Yes | No |
+| Best for | Unknown repetitions | Mandatory first execution | Known repetitions |
+| Syntax | Longer | Medium | Short and clean |
+
+---
+
+# Infinite Loop
+
+## Definition
+A loop that never stops executing is called an infinite loop.
+
+## Causes
+- Missing update statement
+- Condition always true
+
+## Example Situations
+- Server programs
+- Game loops
+- Background processes
+
+---
+
+# Loop Control Statements
+
+## Break Statement
+Used to stop the loop immediately.
+
+### Purpose
+- Exit loop early
+- Stop execution when condition is met
+
+---
+
+## Continue Statement
+Used to skip the current iteration and move to next iteration.
+
+### Purpose
+- Ignore specific values
+- Continue remaining loop execution
+
+---
+
+# Nested Loops
+
+## Definition
+A loop inside another loop is called a nested loop.
+
+## Uses
+- Pattern printing
+- Matrix operations
+- Table generation
+
+---
+
+# Important Terms
+
+| Term | Meaning |
+|---|---|
+| Initialization | Starting value |
+| Condition | Rule to continue loop |
+| Increment | Increase value |
+| Decrement | Decrease value |
+| Iteration | One complete loop cycle |
+
+---
+
+# Common Beginner Mistakes
+
+- Forgetting increment/decrement
+- Wrong loop condition
+- Infinite loops accidentally
+- Using wrong loop type
+
+---
+
+# Quick Revision
+
+| Loop | Special Feature |
+|---|---|
+| While | Checks condition first |
+| Do-While | Executes at least once |
+| For | Best for fixed repetitions |
+
+---
+
+# Real Life Examples
+
+| Situation | Suitable Loop |
+|---|---|
+| ATM menu | Do-While |
+| Printing numbers 1–100 | For |
+| Waiting for password | While |
+
+---
+
+# Conclusion
+
+Loops are one of the most important concepts in programming.
+
+Understanding loops properly helps in:
+- Problem solving
+- DSA
+- Competitive coding
+- Real-world application development
