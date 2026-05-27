@@ -18,7 +18,7 @@ public class WhileLoop
             
             
             int j = 1;
-            while (j<=1)
+            while (j<=1) //Nested while loop
                 {
                     
                     System.out.println("Yey irs saturday n its a holiday" + i);
