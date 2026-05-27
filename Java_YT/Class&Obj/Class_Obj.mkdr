@@ -1,0 +1,259 @@
+# Class and Object in Java
+
+## What is Object-Oriented Programming (OOP)?
+Object-Oriented Programming (OOP) is a programming style based on objects and classes.
+
+It helps in:
+- Organizing code properly
+- Reusing code
+- Making programs easier to manage
+- Improving security and flexibility
+
+---
+
+# What is a Class?
+
+## Definition
+A class is a blueprint or template used to create objects.
+
+It defines:
+- Properties (variables/data)
+- Behaviors (methods/functions)
+
+A class does not occupy memory until an object is created.
+
+---
+
+# Real Life Example of Class
+
+| Class | Object |
+|---|---|
+| Car | BMW, Audi |
+| Student | Utpala |
+| Mobile | iPhone, Samsung |
+
+---
+
+# Features of a Class
+
+A class can contain:
+- Variables
+- Methods
+- Constructors
+- Objects
+
+---
+
+# Purpose of Class
+
+- Groups related data and methods together
+- Makes code reusable
+- Improves code structure
+
+---
+
+# What is an Object?
+
+## Definition
+An object is a real-world entity created from a class.
+
+An object:
+- Occupies memory
+- Has state and behavior
+- Accesses variables and methods of the class
+
+---
+
+# Real Life Example of Object
+
+If `Student` is a class:
+- Utpala
+- Rahul
+- Priya
+
+are objects.
+
+---
+
+# Characteristics of an Object
+
+## 1. State
+Represents data or values.
+
+Example:
+- Name
+- Age
+- Color
+
+---
+
+## 2. Behavior
+Represents actions.
+
+Example:
+- Walking
+- Studying
+- Calling
+
+---
+
+## 3. Identity
+Unique existence of an object.
+
+Example:
+- Roll number
+- ID
+
+---
+
+# Difference Between Class and Object
+
+| Class | Object |
+|---|---|
+| Blueprint/template | Real instance |
+| Logical entity | Physical entity |
+| No memory allocation | Memory allocated |
+| Used to create objects | Created from class |
+
+---
+
+# Creating an Object
+
+## Steps
+1. Create class
+2. Create object using `new` keyword
+3. Access variables and methods
+
+---
+
+# What is the `new` Keyword?
+
+## Definition
+The `new` keyword is used to create objects dynamically in memory.
+
+It:
+- Allocates memory
+- Returns object reference
+
+---
+
+# Object Reference
+
+## Definition
+A reference variable stores the address of an object.
+
+Example:
+- `Student s1`
+
+Here:
+- `Student` → Class name
+- `s1` → Reference variable
+
+---
+
+# Accessing Class Members
+
+Objects are used to access:
+- Variables
+- Methods
+
+using:
+- Dot (`.`) operator
+
+---
+
+# Multiple Objects
+
+A class can create multiple objects.
+
+Each object:
+- Has separate memory
+- Stores different values
+
+---
+
+# Memory Concept
+
+## Class Memory
+Class itself does not occupy memory for variables.
+
+## Object Memory
+Memory is allocated only when object is created.
+
+---
+
+# Benefits of Classes and Objects
+
+- Code reusability
+- Better organization
+- Easy maintenance
+- Real-world modeling
+- Security
+
+---
+
+# Important Terms
+
+| Term | Meaning |
+|---|---|
+| Class | Blueprint/template |
+| Object | Instance of class |
+| Instance | Another word for object |
+| Reference Variable | Stores object address |
+| Method | Function inside class |
+| Property | Variable inside class |
+
+---
+
+# Common Beginner Mistakes
+
+- Confusing class and object
+- Forgetting to create object
+- Using wrong object reference
+- Thinking class stores data directly
+
+---
+
+# Real Life Analogy
+
+## Class = House Blueprint
+## Object = Actual House
+
+One blueprint can create many houses.
+
+---
+
+# Quick Revision
+
+| Concept | Meaning |
+|---|---|
+| Class | Blueprint |
+| Object | Real entity |
+| new keyword | Creates object |
+| Dot operator | Access members |
+
+---
+
+# Why are Classes and Objects Important?
+
+They are the foundation of:
+- OOPs
+- Java programming
+- Real-world application development
+
+Most advanced concepts in Java depend on:
+- Classes
+- Objects
+
+---
+
+# Conclusion
+
+Classes and objects help programmers model real-world things inside programs.
+
+Understanding them properly is very important because they are the base of:
+- Encapsulation
+- Inheritance
+- Polymorphism
+- Abstraction
+- Advanced Java programming
