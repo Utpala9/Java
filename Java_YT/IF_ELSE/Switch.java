@@ -6,7 +6,7 @@ public class Switch {
             switch (day) {
             case 1:
                 System.out.println("Monday");
-                break;
+                break; //come out of block , its imp otherwise sare print hote rahenge
             case 2:
                 System.out.println("Tuesday");
                 break;
