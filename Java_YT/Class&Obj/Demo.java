@@ -25,6 +25,7 @@ public class Demo  //Class name: Demo (Class = Blueprint of Object)
         Calculator calc = new Calculator(); //( to cansume space its imp to creat obj)Creating an object of the Calculator class, 'calc' is the reference variable that holds the object
         //virtual object created in heap memory and 'calc' is pointing to that object
         calc.add(); // calling the add method using the object 'calc'
+        System.out.println("The value of a is: " + calc.a); // accessing the variable 'a' using the object 'calc'
     }
         
 }
