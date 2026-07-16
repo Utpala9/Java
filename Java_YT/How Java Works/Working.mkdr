@@ -1,0 +1,229 @@
+# Java Internals: JDK, JRE, JVM & Memory Management
+
+A theory guide to how Java actually works under the hood — from writing `.java` code to it running on your machine, and where everything lives in memory while it runs.
+
+---
+
+## 1. The Big Three: JDK, JRE, JVM
+
+People often use these terms interchangeably, but they are three distinct, nested things.
+
+```
+┌─────────────────────────────────────────────┐
+│                     JDK                      │
+│   (Java Development Kit — for developers)    │
+│                                               │
+│   ┌───────────────────────────────────────┐ │
+│   │                  JRE                   │ │
+│   │   (Java Runtime Environment — to run)  │ │
+│   │                                         │ │
+│   │   ┌─────────────────────────────────┐ │ │
+│   │   │               JVM               │ │ │
+│   │   │   (Java Virtual Machine)        │ │ │
+│   │   │   Executes bytecode             │ │ │
+│   │   └─────────────────────────────────┘ │ │
+│   │   + Core Libraries (java.lang, etc.)   │ │
+│   └───────────────────────────────────────┘ │
+│   + Compiler (javac), Debugger, javadoc,     │
+│     jar tool, etc.                           │
+└─────────────────────────────────────────────┘
+```
+
+### JVM — Java Virtual Machine
+The JVM is an **abstract machine** — a specification, implemented differently on each OS (Windows, Linux, macOS all have their own JVM builds). Its job:
+- Load `.class` files (compiled bytecode)
+- Verify the bytecode is safe and valid
+- **Interpret or JIT-compile** bytecode into native machine code
+- Manage memory (this is where heap/stack live — more below)
+- Handle garbage collection
+
+The JVM is *why* Java is "write once, run anywhere" — the same `.class` file runs on any machine that has a JVM, regardless of the underlying OS or hardware.
+
+### JRE — Java Runtime Environment
+JRE = **JVM + core class libraries** (`java.lang`, `java.util`, `java.io`, etc.) + supporting files needed to *run* a Java application.
+
+If you only want to **run** a compiled Java program (not write/compile one), the JRE alone is enough. It has no compiler.
+
+### JDK — Java Development Kit
+JDK = **JRE + development tools**, needed to *write and compile* Java code:
+- `javac` — the compiler (turns `.java` → `.class` bytecode)
+- `javadoc` — documentation generator
+- `jdb` — debugger
+- `jar` — packaging tool
+- and more
+
+> **Rule of thumb:** Developers install the **JDK**. End users running a packaged Java app technically only need the **JRE** (though modern deployments often just ship a JDK or a custom runtime image via `jlink`).
+
+---
+
+## 2. From Source Code to Execution
+
+```
+YourFile.java
+     │  (javac — compiler, part of JDK)
+     ▼
+YourFile.class     (bytecode — platform-independent)
+     │  (JVM loads this)
+     ▼
+Class Loader  →  Bytecode Verifier  →  Interpreter / JIT Compiler
+     │
+     ▼
+Native machine code executed by CPU
+```
+
+1. **Compilation**: `javac YourFile.java` produces `YourFile.class` — this is **bytecode**, not native machine code. It's a set of instructions understood only by the JVM.
+2. **Class Loading**: When you run `java YourFile`, the JVM's **ClassLoader** subsystem loads the `.class` file into memory.
+3. **Bytecode Verification**: The JVM checks the bytecode doesn't violate security/access rules (no corrupted or malicious code).
+4. **Execution**: The **Execution Engine** runs the bytecode using:
+   - **Interpreter** — reads and executes bytecode line by line (slower)
+   - **JIT (Just-In-Time) Compiler** — compiles frequently-used ("hot") bytecode into native machine code at runtime, caching it for speed. This is why Java gets *faster* the longer a program runs.
+
+---
+
+## 3. Runtime Data Areas — Where Things Are Stored
+
+When a Java program runs, the JVM divides memory into several distinct regions. This is the part most beginners find confusing, so let's go slow.
+
+```
+                    JVM Memory
+┌──────────────────────────────────────────────────┐
+│                                                    │
+│   ┌────────────┐   ┌────────────┐   ┌───────────┐│
+│   │   Stack    │   │    Heap    │   │  Method   ││
+│   │ (per thread)│   │  (shared)  │   │   Area    ││
+│   └────────────┘   └────────────┘   └───────────┘│
+│                                                    │
+│   ┌────────────┐   ┌────────────────────────────┐│
+│   │  PC Registers│  │      Native Method Stack   ││
+│   │ (per thread) │  │      (for native/C code)   ││
+│   └────────────┘   └────────────────────────────┘│
+└──────────────────────────────────────────────────┘
+```
+
+### 3.1 Stack Memory
+
+- **One stack per thread** — created when the thread starts.
+- Stores **method calls** as *stack frames*. Every time a method is invoked, a new frame is pushed; when the method returns, the frame is popped off.
+- Each frame holds:
+  - **Local variables** (primitives like `int`, `boolean`, and *reference variables* pointing to heap objects)
+  - Method parameters
+  - The return address (where to resume execution after the method finishes)
+- **LIFO** (Last In, First Out) structure.
+- Memory is automatically reclaimed the instant a method returns — no garbage collector involved here.
+- Fast access, but **limited size** — deep or infinite recursion causes a `StackOverflowError`.
+
+```java
+public void throwIt(){
+    int keys = 85;      // 'keys' lives on the stack (local variable)
+    Keyboard3 obj = new Keyboard3(); // 'obj' (the reference) lives on stack;
+                                      // the actual object lives on the heap
+}
+```
+
+### 3.2 Heap Memory
+
+- **One heap, shared across all threads** in the JVM.
+- This is where **all objects** (created via `new`) and **instance variables** actually live.
+- Managed by the **Garbage Collector (GC)** — objects with no remaining references become eligible for automatic cleanup.
+- Larger but slower to access than the stack.
+- Running out of heap space (too many live objects) causes `OutOfMemoryError`.
+
+The heap is further divided (generational GC model, used by default in HotSpot JVM):
+
+| Region | Purpose |
+|---|---|
+| **Young Generation** (Eden + 2 Survivor spaces) | Newly created objects. Most objects die young — this is where minor GC runs frequently. |
+| **Old / Tenured Generation** | Objects that survived several GC cycles get "promoted" here. Collected less often (major/full GC). |
+| **Metaspace** (Java 8+, replaced PermGen) | Stores class metadata — not part of the heap itself but closely related. |
+
+### 3.3 Method Area (part of Metaspace since Java 8)
+
+- Shared across all threads.
+- Stores **class-level data**: class structure, method bytecode, static variables, constant pool (string literals, final constants).
+
+```java
+class Keyboard3 {
+    static int totalKeyboards; // lives in Method Area, not heap
+}
+```
+
+### 3.4 PC (Program Counter) Register
+
+- One per thread.
+- Keeps track of the **address of the currently executing instruction** in that thread. Essential for multithreading — lets the JVM know where to resume each thread.
+
+### 3.5 Native Method Stack
+
+- Used when Java code calls **native code** (written in C/C++ via JNI — Java Native Interface).
+
+---
+
+## 4. Stack vs Heap — Quick Comparison
+
+| Aspect | Stack | Heap |
+|---|---|---|
+| Stores | Local variables, method calls, references | Objects, instance variables |
+| Scope | Per thread | Shared across the whole app |
+| Lifetime | Ends when method returns | Ends when garbage collected |
+| Speed | Very fast | Slower |
+| Size | Small, fixed | Larger, configurable |
+| Error on overflow | `StackOverflowError` | `OutOfMemoryError` |
+| Managed by | Automatic (LIFO pop) | Garbage Collector |
+
+### Worked example
+
+```java
+class Keyboard3 {
+    private int keys;       // instance variable → stored INSIDE the object, on heap
+}
+
+public class Demo {
+    public static void main(String[] args) {
+        int num = 8;                    // 'num' → stack (primitive local var)
+        Keyboard3 obj = new Keyboard3(); // 'obj' (reference) → stack
+                                          // the actual Keyboard3 object → heap
+    }
+}
+```
+
+Visually:
+
+```
+STACK (main thread)                HEAP
+┌─────────────────┐          ┌──────────────────────┐
+│ num = 8         │          │  Keyboard3 object     │
+│ obj = 0x7f3a... ─┼─────────▶  keys = 100            │
+└─────────────────┘          │  color = "Green"       │
+                              └──────────────────────┘
+```
+
+`obj` itself (the reference/pointer) is a small variable sitting on the stack. It merely *points to* the actual object, which lives on the heap.
+
+---
+
+## 5. Garbage Collection (GC) — The Short Version
+
+Java doesn't require manual memory deallocation (unlike C/C++'s `free()`/`delete`). The **Garbage Collector** automatically finds objects on the heap that are no longer reachable from any active reference and reclaims their memory.
+
+Basic cycle:
+1. **Mark** — identify which objects are still reachable (referenced) from active threads/stack.
+2. **Sweep** — remove unreachable objects.
+3. **Compact** (optional) — defragment remaining memory.
+
+Common GC algorithms in modern JVMs: **Serial GC, Parallel GC, G1 GC (default since Java 9), ZGC, Shenandoah** — each trading off pause time vs throughput differently.
+
+---
+
+## 6. Summary Cheat Sheet
+
+- **JDK** = tools to *write & compile* Java (`javac` + JRE)
+- **JRE** = environment to *run* Java (JVM + libraries)
+- **JVM** = the engine that *executes* bytecode, OS-specific
+- **Stack** = fast, per-thread, holds local variables & method calls, auto-cleaned
+- **Heap** = shared, holds all objects, cleaned by Garbage Collector
+- **Method Area / Metaspace** = class definitions, static variables, constants
+- Bytecode (`.class`) is what makes Java **platform-independent** — the JVM is what makes it **platform-specific under the hood**
+
+---
+
+*Written as personal Java learning notes while working through OOP concepts (Encapsulation, Inheritance, Polymorphism).*
