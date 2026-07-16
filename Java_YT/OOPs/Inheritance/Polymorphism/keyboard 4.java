@@ -1,4 +1,3 @@
-package OOPs.Inheritance.Polimorphisum;
 
 package OOPs.Inheritance.Polymorphism;
 
