@@ -61,4 +61,5 @@ class Demo {
 
         obj.setColor("Red"); // accessing this variale indirectly through methods(getter and setter methods) // as we r setting the color therefor used setColor method
         System.out.println(obj.getKeys()); // key is not a varianble of this method , therefore we need to use the object reference variable to access // here we wanna get methoud to get the value of keys variable therefore used getKeys
+    }
 }
